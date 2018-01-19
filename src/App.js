@@ -106,7 +106,8 @@ export default App;
 const mapStateToProps = state => ({
     events: state.events,
     status: state.status,
-		serviceAddress: state.serviceAddress  
+		serviceAddress: state.serviceAddress,
+		propNames: state.propNames  
 })
 
 const Container = connect(mapStateToProps, {

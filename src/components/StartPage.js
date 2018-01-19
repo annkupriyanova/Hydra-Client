@@ -8,7 +8,7 @@ import logo from '../calendar-logo.png'
 class StartPage extends Component {
 
     render() {
-        const { events, fetchMusicEvents, fetchSportsEvents} = this.props
+        const { events, propNames, fetchMusicEvents, fetchSportsEvents} = this.props
         const displayStatus = status.split(' ')[0] === "Error"? 
                         <p style={{color: 'red'}}>{status}</p> : <p>{status}</p>
         return (
@@ -20,7 +20,7 @@ class StartPage extends Component {
                 <div>
                     <NavBar onClickMusic={ fetchMusicEvents } onClickSports={fetchSportsEvents} />
                     { displayStatus }
-                    <EventsList events={ events } />
+                    <EventsList events={ events } propNames={ propNames } />
                 </div>
             </div>
         );

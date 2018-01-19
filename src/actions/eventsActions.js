@@ -1,14 +1,11 @@
 export const FETCH_EVENTS_REQUEST = 'FETCH_EVENTS_REQUEST'
 export const FETCH_EVENTS_SUCCESS = 'FETCH_EVENTS_SUCCESS'
 export const FETCH_EVENTS_FAILURE = 'FETCH_EVENTS_FAILURE'
+export const FETCH_PROP_NAMES_SUCCESS = 'FETCH_PROP_NAMES_SUCCESS'
 
-const musicServiceAddress = 'http://localhost:8080';
-const sportsServiceAddress = 'http://localhost:8081';
-
-//const context = '/context';
-//const entry_point = '/entry-point.json';
-//const vocab = '/vocab.json';
-
+const MUSIC_SERVICE_ADDRESS = 'http://localhost:8080'
+const SPORTS_SERVICE_ADDRESS = 'http://localhost:8081'
+const SCHEMA_EVENT_TYPE = 'http://schema.org/Event'
 
 const fetchEventsRequest = (serviceAddress) => ({
     type: FETCH_EVENTS_REQUEST,
@@ -25,15 +22,21 @@ const fetchEventsFailure = (error) => ({
     error
 })
 
+const fetchPropNamesSuccess = (propNames) => ({
+    type: FETCH_PROP_NAMES_SUCCESS,
+    propNames
+})
+
 export const fetchMusicEvents = () => {
-    return fetchEvents(musicServiceAddress)
+    return fetchEvents(MUSIC_SERVICE_ADDRESS)
 }
 
 export const fetchSportsEvents = () => {
-    return fetchEvents(sportsServiceAddress)
+    return fetchEvents(SPORTS_SERVICE_ADDRESS)
 }
 
 const fetchEvents = (service_address) => {
+    var propNames = {}
     return function(dispatch, getState){
         //const state = getState()
         //const service_address = state.serviceAddress
@@ -48,14 +51,15 @@ const fetchEvents = (service_address) => {
                         .then(entryPoint => {
                             // 3. в новом объектк EntryPoint ищем "EntryPoint": "vocab:EntryPoint" и 
                             //переходим по ссылке "vocab": "http://localhost:8080/context/vocab.json#"
+                            var epName = entryPoint['@context'].EntryPoint
                             var docName = entryPoint['@context'].EntryPoint.split(':')[0]
                             return fetch(entryPoint['@context'][docName])
                                 .then(res => res.json())
                                 .then(vocab => {
-                                    // 4. функция разбора словаря (Ваня) => массив с лейблами
-                                    return get_labels(vocab);
-                                });
-                            
+                                    propNames = getPropNames(vocab)
+                                    // 4. функция разбора словаря => массив с лейблами
+                                    return getLabels(vocab, epName);
+                                })                            
                         })
                         .then(labels => {
                             if (labels) {
@@ -64,6 +68,7 @@ const fetchEvents = (service_address) => {
                                     fetch(service_address + json[label])
                                         .then(res => res.json())
                                         .then(eventjson => dispatch(fetchEventsSuccess(eventjson.members)))
+                                        .then(() => dispatch(fetchPropNamesSuccess(propNames)))
                                 }
                             }
                             else
@@ -75,12 +80,12 @@ const fetchEvents = (service_address) => {
     }
 }
 
-function get_labels(vocab) {
+function getLabels(vocab, epName) {
 	var labels = []
 	var supportedClassProp = vocab.supportedClass;
 	for (var el of supportedClassProp)
 		// и смотрим что лежит у ентрипоинт-"EntryPoint": "vocab:EntryPoint"
-		if (el['@id'] === 'vocab:EntryPoint') {
+		if (el['@id'] === epName) {
 			//  Смотрим у него supportedProperty
 			for (var property of el.supportedProperty) {
 				// и в нем supportedOperation
@@ -91,7 +96,7 @@ function get_labels(vocab) {
 						// ищем vocab:EventCollection и смотрим там на "collectionItemsType": "http://schema.org/Event" 
 						for (var elem of supportedClassProp) {
 		          if (elem['@id'] === idOfReturn && elem.hasOwnProperty("collectionItemsType") 
-			          && elem["collectionItemsType"] === "http://schema.org/Event"){
+			          && elem["collectionItemsType"] === SCHEMA_EVENT_TYPE){
 			          	labels.push(property.property.label)
 			        }
 			      }
@@ -100,4 +105,17 @@ function get_labels(vocab) {
 			}
 			return labels
 		}
+}
+
+function getPropNames(vocab) {
+  const propNames={}
+  const supportedClassProp = vocab.supportedClass;
+  for (var el of supportedClassProp) {
+    if (el['@id'] === SCHEMA_EVENT_TYPE) {
+      for (var supportedProperty of el.supportedProperty) {
+        propNames[supportedProperty.property] = supportedProperty['hydra:title']
+      }
+    }
+  }
+  return propNames
 }

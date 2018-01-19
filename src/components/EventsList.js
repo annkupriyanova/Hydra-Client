@@ -2,10 +2,13 @@ import React from 'react';
 import Event from './Event';
 import { Table } from 'react-bootstrap'
 
-const EventsList = ({ events = [] }) => {
+const NAME = 'http://schema.org/name'
 
+const EventsList = ({ events = [], propNames = {} }) => {
+
+    const name = propNames[NAME]
     const eventsToRender = events.map((elm, index) =>
-                    <Event key={index} name={elm.name} url={elm['@id']} />)
+                    <Event key={index} name={elm[name]} url={elm['@id']} />)
 
     return (
         <div> 

@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux'
-import { FETCH_EVENTS_REQUEST, FETCH_EVENTS_SUCCESS, FETCH_EVENTS_FAILURE }  from '../actions/eventsActions'
+import { FETCH_EVENTS_REQUEST, 
+        FETCH_EVENTS_SUCCESS, 
+        FETCH_EVENTS_FAILURE,
+        FETCH_PROP_NAMES_SUCCESS }  from '../actions/eventsActions'
 
 const statusReducer = (state = "", action) => {
     switch (action.type) {
@@ -30,7 +33,17 @@ const eventsReducer = (state = [], action) => {
 const serviceAddressReducer = (state = "", action) => {
     switch (action.type) { 
         case FETCH_EVENTS_REQUEST:
-            return action.serviceAddress; //?????[...state, ...action.events]
+            return action.serviceAddress;
+        
+        default:
+            return state;
+    }
+}
+
+const propNamesReducer = (state = {}, action) => {
+    switch (action.type) { 
+        case FETCH_PROP_NAMES_SUCCESS:
+            return action.propNames; 
         
         default:
             return state;
@@ -40,7 +53,8 @@ const serviceAddressReducer = (state = "", action) => {
 const rootReducer = combineReducers({
     status: statusReducer,
     events: eventsReducer,
-    serviceAddress: serviceAddressReducer
+    serviceAddress: serviceAddressReducer,
+    propNames: propNamesReducer
 })
 
 export default rootReducer
