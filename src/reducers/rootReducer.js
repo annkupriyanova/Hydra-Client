@@ -2,7 +2,8 @@ import { combineReducers } from 'redux'
 import { FETCH_EVENTS_REQUEST, 
         FETCH_EVENTS_SUCCESS, 
         FETCH_EVENTS_FAILURE,
-        FETCH_PROP_NAMES_SUCCESS }  from '../actions/eventsActions'
+        FETCH_PROP_NAMES_SUCCESS,
+        SHOW_MODAL }  from '../actions/eventsActions'
 
 const statusReducer = (state = "", action) => {
     switch (action.type) {
@@ -50,11 +51,33 @@ const propNamesReducer = (state = {}, action) => {
     }
 }
 
+const modalReducer = (state = false, action) => {
+    switch (action.type) { 
+        case SHOW_MODAL:
+            return action.showModal; 
+        
+        default:
+            return state;
+    }
+}
+
+const currentEventReducer = (state = {}, action) => {
+    switch (action.type) { 
+        case SHOW_MODAL:
+            return action.currentEvent; 
+        
+        default:
+            return state;
+    }
+}
+
 const rootReducer = combineReducers({
     status: statusReducer,
     events: eventsReducer,
     serviceAddress: serviceAddressReducer,
-    propNames: propNamesReducer
+    propNames: propNamesReducer,
+    showModal: modalReducer,
+    currentEvent: currentEventReducer
 })
 
 export default rootReducer

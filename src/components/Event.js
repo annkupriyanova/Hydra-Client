@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 
-const Event = ({ name, url }) => (
+const Event = ({ name, url, handleShowModal }) => (
     <tr>
         <td>
-            <a href={url}>{ name }</a>
+            <Button bsStyle="link" onClick={ handleShowModal }>{ name }</Button>
         </td>
         <td>
             
@@ -15,3 +16,6 @@ const Event = ({ name, url }) => (
 export default Event;
 
 //<Link to={ url }>{ name }</Link>
+//<Button bsStyle="link" onClick={ handleShowModal }>{ name }</Button>
+//<a href={ url } onClick={ handleShowModal }>{ name }</a>
+

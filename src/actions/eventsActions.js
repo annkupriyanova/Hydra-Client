@@ -2,6 +2,7 @@ export const FETCH_EVENTS_REQUEST = 'FETCH_EVENTS_REQUEST'
 export const FETCH_EVENTS_SUCCESS = 'FETCH_EVENTS_SUCCESS'
 export const FETCH_EVENTS_FAILURE = 'FETCH_EVENTS_FAILURE'
 export const FETCH_PROP_NAMES_SUCCESS = 'FETCH_PROP_NAMES_SUCCESS'
+export const SHOW_MODAL = 'SHOW_MODAL'
 
 const MUSIC_SERVICE_ADDRESS = 'http://localhost:8080'
 const SPORTS_SERVICE_ADDRESS = 'http://localhost:8081'
@@ -26,6 +27,25 @@ const fetchPropNamesSuccess = (propNames) => ({
     type: FETCH_PROP_NAMES_SUCCESS,
     propNames
 })
+
+const showModal = (showModal, currentEvent) => ({
+    type: SHOW_MODAL,
+    showModal,
+    currentEvent
+})
+
+export const handleShowModal = (index) => {
+    return function(dispatch, getState){
+        const state = getState()
+        dispatch(showModal(true, state.events[index]))
+    }
+}
+
+export const handleCloseModal = () => {
+    return function(dispatch, getState){
+        dispatch(showModal(false, {}))
+    }
+}
 
 export const fetchMusicEvents = () => {
     return fetchEvents(MUSIC_SERVICE_ADDRESS)
