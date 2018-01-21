@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 
 const Event = ({ name, url, handleShowModal }) => (
@@ -11,8 +10,4 @@ const Event = ({ name, url, handleShowModal }) => (
 )
 
 export default Event;
-
-//<Link to={ url }>{ name }</Link>
-//<Button bsStyle="link" onClick={ handleShowModal }>{ name }</Button>
-//<a href={ url } onClick={ handleShowModal }>{ name }</a>
 

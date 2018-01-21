@@ -5,8 +5,8 @@ const NAME = 'http://schema.org/name'
 const START_DATE = 'http://schema.org/startDate'
 const END_DATE = 'http://schema.org/endDate'
 const ACTOR = 'http://schema.org/actor'
-const HOME_TEAM = ''
-const AWAY_TEAM = ''
+const HOME_TEAM = 'http://schema.org/homeTeam'
+const AWAY_TEAM = 'http://schema.org/awayTeam'
 
 
 class EventDetailed extends Component {
@@ -22,6 +22,18 @@ class EventDetailed extends Component {
         const homeTeam = (propNames[HOME_TEAM])? propNames[HOME_TEAM]: false
         const awayTeam = (propNames[AWAY_TEAM])? propNames[AWAY_TEAM]: false
 
+        const start = new Date(currentEvent[startDate]).toLocaleString()
+        const end = new Date(currentEvent[endDate]).toLocaleString()
+
+        var renderDetail = (<li></li>)
+        if (actor) {
+            renderDetail = (<li><b>Actor: </b>{ currentEvent[actor] && currentEvent[actor][name] }</li>)
+        }
+        else if (homeTeam && awayTeam) {
+            renderDetail = (<li><b>Home vs. Away Teams: </b>{ currentEvent[homeTeam] && currentEvent[homeTeam][name] } vs. 
+                                    { currentEvent[awayTeam] && currentEvent[awayTeam][name] }</li>)
+        }
+
         return (
             <Modal show={ showModal } onHide={ onHide }>
                 <Modal.Header>
@@ -29,14 +41,9 @@ class EventDetailed extends Component {
                     
                     <Modal.Body>
                         <ul>
-                            <li>Start Date: { currentEvent[startDate] }</li>
-                            <li>End Date: { currentEvent[endDate] }</li>
-                            <li>
-                                {
-                                    actor ? `Actor: ${ currentEvent[actor] && currentEvent[actor][name] }` : 
-                                            `Home vs. Away Teams: ${ currentEvent[homeTeam] } vs. ${ currentEvent[awayTeam] }`
-                                }
-                            </li>
+                            <li><b>Start Date:</b> { start }</li>
+                            <li><b>End Date:</b> { end }</li>
+                            { renderDetail }
                         </ul>
                     </Modal.Body>
                     
