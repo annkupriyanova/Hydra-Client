@@ -33,7 +33,7 @@ class EventDetailed extends Component {
                             <li>End Date: { currentEvent[endDate] }</li>
                             <li>
                                 {
-                                    actor? `Actor: ${ currentEvent[actor] }` : 
+                                    actor ? `Actor: ${ currentEvent[actor] && currentEvent[actor][name] }` : 
                                             `Home vs. Away Teams: ${ currentEvent[homeTeam] } vs. ${ currentEvent[awayTeam] }`
                                 }
                             </li>
