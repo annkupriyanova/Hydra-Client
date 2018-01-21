@@ -5,8 +5,8 @@ const NAME = 'http://schema.org/name'
 const START_DATE = 'http://schema.org/startDate'
 const END_DATE = 'http://schema.org/endDate'
 const ACTOR = 'http://schema.org/actor'
-const HOME_TEAM = ''
-const AWAY_TEAM = ''
+const HOME_TEAM = 'http://schema.org/homeTeam'
+const AWAY_TEAM = 'http://schema.org/awayTeam'
 
 
 class EventDetailed extends Component {
