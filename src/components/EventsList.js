@@ -9,7 +9,7 @@ const EventsList = ({ events = [], propNames = {}, handleShowModal }) => {
     const name = propNames[NAME]
     const eventsToRender = events.map((elm, index) =>
                 <Event key={index} name={elm[name]} url={elm['@id']} 
-                    handleShowModal={ (e) => handleShowModal(index) }/>)
+                    handleShowModal={ (e) => handleShowModal(elm['@id']) }/>)
 
     return (
         <div> 

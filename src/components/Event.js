@@ -7,9 +7,6 @@ const Event = ({ name, url, handleShowModal }) => (
         <td>
             <Button bsStyle="link" onClick={ handleShowModal }>{ name }</Button>
         </td>
-        <td>
-            
-        </td>
     </tr>
 )
 

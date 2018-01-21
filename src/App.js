@@ -109,7 +109,7 @@ const mapStateToProps = state => ({
 		serviceAddress: state.serviceAddress,
 		propNames: state.propNames,
 		showModal: state.showModal,
-		currentEvent: state.currentEvent 
+		currentEvent: state.currentEvent,
 })
 
 const Container = connect(mapStateToProps, {

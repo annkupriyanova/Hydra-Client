@@ -4,8 +4,8 @@ export const FETCH_EVENTS_FAILURE = 'FETCH_EVENTS_FAILURE'
 export const FETCH_PROP_NAMES_SUCCESS = 'FETCH_PROP_NAMES_SUCCESS'
 export const SHOW_MODAL = 'SHOW_MODAL'
 
-const MUSIC_SERVICE_ADDRESS = 'http://localhost:8080'
-const SPORTS_SERVICE_ADDRESS = 'http://localhost:8081'
+const MUSIC_SERVICE_ADDRESS = 'http://localhost:1234'
+const SPORTS_SERVICE_ADDRESS = 'http://localhost:8080'
 const SCHEMA_EVENT_TYPE = 'http://schema.org/Event'
 
 const fetchEventsRequest = (serviceAddress) => ({
@@ -34,11 +34,12 @@ const showModal = (showModal, currentEvent) => ({
     currentEvent
 })
 
-export const handleShowModal = (index) => {
-    return function(dispatch, getState){
+export const handleShowModal = (id) => {
+    /*return function(dispatch, getState){
         const state = getState()
         dispatch(showModal(true, state.events[index]))
-    }
+    }*/
+    return getEventDetails(id)
 }
 
 export const handleCloseModal = () => {
@@ -138,4 +139,36 @@ function getPropNames(vocab) {
     }
   }
   return propNames
+}
+
+function getEventDetails(id) {
+    var event = {}
+    return function(dispatch, getState){
+        const state = getState()
+        return fetch(state.serviceAddress + id)
+            .then(res => res.json())
+            .then(eventObj => {
+                event = eventObj
+                return updateSpecificPropNames(state.serviceAddress + event['@context'])
+            })
+            .then(propNames => dispatch(fetchPropNamesSuccess(propNames)))
+            .then(() => dispatch(showModal(true, event)))
+        }
+}
+
+function updateSpecificPropNames(contextUrl) {
+    var propNames = {}
+    //return function(dispatch, getState) {
+        return fetch(contextUrl)
+                .then(res => res.json())
+                .then(obj => {
+                    if (obj['@context']){
+                        for (let [key, value] of Object.entries(obj['@context'])){
+                            propNames[value] = key
+                        }
+                    }
+                    return propNames
+                })
+                //.then(() => dispatch(fetchPropNamesSuccess(propNames)))
+    //}
 }
